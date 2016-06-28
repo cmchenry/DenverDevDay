@@ -4,6 +4,7 @@ using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using TripleDBot.Model;
@@ -11,13 +12,16 @@ using TripleDBot.Services;
 
 namespace TripleDBot.Dialogs
 {
-    [LuisModel("96301556-8495-4542-9c16-fabb30918591", "0692d72839ab496b83d5cbe7e3845f36")]
     [Serializable]
     public class TripleDDialog : LuisDialog<object>
     {
-        
-        public TripleDDialog(ILuisService service = null) : base(service)
+
+        public TripleDDialog(ILuisService service=null) : base(service)
         {
+            var modelId = ConfigurationManager.AppSettings.Get("LuisModelId");
+            var subscriptionKey = ConfigurationManager.AppSettings.Get("LuisSubscriptionKey");
+            var luisAttribute = new LuisModelAttribute(modelId, subscriptionKey);
+            service = new LuisService(luisAttribute);
         }
 
         private string message;
